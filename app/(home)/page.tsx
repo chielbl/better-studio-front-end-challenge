@@ -35,7 +35,7 @@ const fetchLogs = async () => {
 
 export default async function Home() {
   const logs = await fetchLogs();
-  console.log("🚀 ~ Home ~ logs:", logs);
+
   return (
     <section id="home-page">
       <LogList logs={logs} />
