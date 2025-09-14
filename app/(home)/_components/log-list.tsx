@@ -8,7 +8,7 @@ export default function UserList({ logs }: LogListProps) {
   return (
     <div className="flex flex-col gap-8 m-auto max-w-5xl">
       {logs.map((log) => (
-        <LogItem key={log.timestamp} logData={log} />
+        <LogItem key={log.authorId} logData={log} />
       ))}
     </div>
   );
