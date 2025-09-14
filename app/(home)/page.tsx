@@ -25,7 +25,7 @@ const fetchLogs = async () => {
 
     // Decode chunk
     const chunk = decoder.decode(value, { stream: true });
-    const parsedLogs = chunk.replaceAll(`"`, "").split(",");
+    const parsedLogs = chunk.replaceAll(`"`, "").replaceAll("[", "").split(",");
 
     return parsedLogs.map(mapLogData);
   } finally {
