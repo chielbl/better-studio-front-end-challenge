@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fdf3f4;
+  /* Font color (BetterStudio) */
+  --foreground: #111827;
+  /* Font style (BetterStudio) */
+  --font-family: "Figtree", sans-serif;
+}
+
+@theme inline {
+  /* COLORS */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* remove all Tailwind colors */
+  --color-*: initial;
+  /* Color theme (kind of => BetterStudio)*/
+  --color-primary-50: #fdf3f4;
+  --color-primary-100: #fce7ec;
+  --color-primary-200: #f8d3dc;
+  --color-primary-300: #f2abbe;
+  --color-primary-400: #eb81a0;
+  --color-primary-500: #df5480;
+  --color-primary-600: #ca346b;
+  --color-primary-700: #aa2659;
+  --color-primary-800: #8e234f;
+  --color-primary-900: #7a2149;
+  --color-primary-950: #440d25;
+
+  /* WIDTH */
+  /* Add new breakpoint */
+  --width-2k: 90rem;
+  --width-4k: 135rem;
+  --max-width-2k: 90rem;
+  --max-width-4k: 135rem;
+
+  /* BREAKPOINTS */
+  /* Add new breakpoint */
+  --breakpoint-xs: 30rem;
+  --breakpoint-2k: 90rem;
+  --breakpoint-4k: 135rem;
+}
