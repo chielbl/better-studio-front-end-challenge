@@ -1,20 +1,14 @@
-export interface LogData {
-  timestamp: string;
-  message: string;
-  level: string;
-  source: string;
-  authorId: string;
-}
+import { Log } from "../types/Log";
 
-export function mapLogData(logData: string): LogData {
+export function mapLogData(logData: string): Log {
   // Split on "|=|" separator
   const parts = logData.split("|=|");
 
-  if (parts.length !== 5) {
-    throw new Error(
-      `Invalid log format. Expected 5 parts, got ${parts.length}`
-    );
-  }
+  // if (parts.length !== 5) {
+  //   throw new Error(
+  //     `Invalid log format. Expected 5 parts, got ${parts.length}`
+  //   );
+  // }
 
   return {
     timestamp: parts[0].trim(),

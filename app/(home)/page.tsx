@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { mapLogData } from "./_utils/map-log-data";
+import { LogList } from "./_components";
+import { mapLogData } from "./_utils";
 
 const fetchLogs = async () => {
   const response = await fetch("https://challenges.betterstudio.io/logs", {
@@ -20,7 +21,7 @@ const fetchLogs = async () => {
   try {
     const { value } = await reader.read();
 
-    if (!value) return notFound();
+    if (value === undefined) return notFound();
 
     // Decode chunk
     const chunk = decoder.decode(value, { stream: true });
@@ -35,5 +36,9 @@ const fetchLogs = async () => {
 export default async function Home() {
   const logs = await fetchLogs();
   console.log("🚀 ~ Home ~ logs:", logs);
-  return <section>home</section>;
+  return (
+    <section id="home-page">
+      <LogList logs={logs} />
+    </section>
+  );
 }
