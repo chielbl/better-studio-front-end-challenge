@@ -25,9 +25,14 @@ const fetchLogs = async () => {
 
     // Decode chunk
     const chunk = decoder.decode(value, { stream: true });
-    const parsedLogs = chunk.replaceAll(`"`, "").replaceAll("[", "").split(",");
+    if (!chunk || chunk.length === 0) return notFound();
 
-    return parsedLogs.map(mapLogData);
+    const formattedLogs = chunk
+      .replaceAll(`"`, "")
+      .replaceAll("[", "")
+      .split(",");
+
+    return formattedLogs.map(mapLogData);
   } finally {
     reader.releaseLock();
   }
