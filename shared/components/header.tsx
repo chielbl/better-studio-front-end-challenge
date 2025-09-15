@@ -12,7 +12,7 @@ export default function Header() {
           height={32}
         />
       </Link>
-      <h1 className="text-md lg:text-2xl">
+      <h1 className="invisible sm:visible text-md lg:text-2xl">
         Chiel Bleyenbergh (Front-end Challenge)
       </h1>
       <Link
