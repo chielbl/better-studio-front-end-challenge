@@ -17,7 +17,7 @@ export default function Header() {
       </h1>
       <Link
         href="/"
-        className="bg-primary-200 hover:bg-primary-300 hover:text-primary-900 px-4 py-2 rounded-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5"
+        className="bg-primary-500 text-primary-50 hover:bg-primary-600 px-4 py-2 rounded-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5"
       >
         Home
       </Link>
