@@ -41,7 +41,7 @@ export default function UserList({ logs }: LogListProps) {
         selectedLevel={selectedLevel}
         levelOnClick={handleSelectLevel}
       />
-      <div className="flex flex-col gap-6 m-auto max-w-7xl">
+      <div className="flex flex-col gap-6 xl:w-6xl xl:m-auto">
         {filteredLogs.map((log) => (
           <LogItem key={log.authorId} logData={log} />
         ))}
