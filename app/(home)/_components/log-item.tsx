@@ -33,7 +33,7 @@ export default function LogItem({ logData }: LogItemProps) {
     <div className="w-full border border-primary-400 rounded-lg overflow-hidden">
       <button
         onClick={toggleAccordion}
-        className="w-full flex justify-between items-center gap-4 p-4 bg-primary-100 transition-colors cursor-pointer"
+        className="w-full flex justify-between items-center gap-4 p-4 bg-primary-100 transition-colors cursor-pointer hover:bg-primary-200"
       >
         <Icon />
         <p className="text-sm md:text-lg">{timestamp}</p>
