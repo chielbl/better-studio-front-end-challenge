@@ -8,7 +8,7 @@ import {
   Rocket,
   TriangleAlert,
 } from "lucide-react";
-import { Log } from "../types";
+import { Log } from "../_types";
 import { useState } from "react";
 import Link from "next/link";
 
