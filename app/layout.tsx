@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main className="flex flex-col gap-20 p-4 max-w-2k m-auto">
+        <main className="flex flex-col gap-12 p-4 max-w-2k m-auto">
           <Header />
           {children}
           <Footer />

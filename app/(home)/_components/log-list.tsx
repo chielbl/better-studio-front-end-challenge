@@ -6,7 +6,7 @@ interface LogListProps {
 }
 export default function UserList({ logs }: LogListProps) {
   return (
-    <div className="flex flex-col gap-6 xl:w-6xl xl:m-auto">
+    <div className="flex flex-col gap-12 xl:w-6xl xl:m-auto">
       {logs.map((log) => (
         <LogItem key={log.authorId} logData={log} />
       ))}

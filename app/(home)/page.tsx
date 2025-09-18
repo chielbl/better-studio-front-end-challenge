@@ -14,7 +14,9 @@ export default function Home() {
     isLoading,
   } = useSWR("/api/logs", fetchLogs, {
     revalidateOnFocus: false, //. To avoid re-new the data when windows is focus.
+    refreshInterval: 0, // Also disable interval revalidation
   });
+
   const [searchValue, setSearchValue] = useState<string>("");
   const [selectedLevel, setSelectedLevel] = useState<string>("");
 
@@ -65,8 +67,8 @@ export default function Home() {
         <Loader message="Fetching logs" />
       </div>
     );
-  if (!isLoading && !logs) return notFound();
   if (error) return <p>Error loading logs: {error.message}</p>;
+  if (!isLoading && !error && !logs) return notFound();
 
   return (
     <section id="home-page" className="min-h-screen">

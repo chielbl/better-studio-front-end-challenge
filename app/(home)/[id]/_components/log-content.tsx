@@ -1,13 +1,51 @@
-import { Info, OctagonX, Rocket, TriangleAlert } from "lucide-react";
+"use client";
+
+import { Loader } from "@/shared/components";
 import { Log } from "@/shared/types";
 import classNames from "classnames";
-import Link from "next/link";
+import { Info, TriangleAlert, OctagonX, Rocket } from "lucide-react";
+import { notFound } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSWRConfig } from "swr";
 
-interface LogItemProps {
-  logData: Log;
+interface LogContentProps {
+  id: string; // authorId
 }
-export default function LogItem({ logData }: LogItemProps) {
-  const { authorId, timestamp, level, message, source } = logData;
+export default function LogContent({ id }: LogContentProps) {
+  const { cache } = useSWRConfig();
+  const cachedLogs = cache.get("/api/logs");
+
+  const [log, setLog] = useState<Log | undefined>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    if (!cachedLogs || cachedLogs === undefined) {
+      setIsLoading(false);
+      return setError(
+        "We lost our cache data, please go back to your home page"
+      );
+    }
+    const cachedData = cachedLogs?.data as Log[];
+    const foundLog = cachedData.find((log) => log.authorId === id);
+    setLog(foundLog);
+    setIsLoading(false);
+  }, [cachedLogs, id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <Loader message={`Fetching log detail from ${id}`} />
+      </div>
+    );
+  }
+  if (error) {
+    return <p className="text-center text-gray-500">{error}</p>;
+  }
+  if (!isLoading && !error && !log) return notFound();
+  if (!log) return null;
+
+  const { authorId, level, message, source, timestamp } = log;
 
   const Icon =
     (level === "info" && Info) ||
@@ -42,7 +80,7 @@ export default function LogItem({ logData }: LogItemProps) {
   );
 
   return (
-    <Link href={`/${authorId}`} className={containerStyles}>
+    <div className={containerStyles}>
       <div className={topStyles}>
         {Icon ? <Icon className={getIconColor} /> : <span className="flex-1" />}
         <p className="text-sm md:text-lg">
@@ -58,11 +96,11 @@ export default function LogItem({ logData }: LogItemProps) {
           <p>
             <strong>Message:</strong> {message}
           </p>
-          <p>
+          <p className="mb-4">
             <strong>Source:</strong> {source}
           </p>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
