@@ -1,7 +1,7 @@
-export interface Log {
+export type Log = {
   timestamp: string;
   message: string;
   level: string;
   source: string;
   authorId: string;
-}
+};

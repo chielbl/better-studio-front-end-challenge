@@ -1,1 +1,1 @@
-export * from "./map-log-data";
+export * from "./fetch-logs";

@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Log } from "../_types";
 import LogItem from "./log-item";
 import LogLevelFilter from "./log-level-filter";
+import { Log } from "@/shared/types";
 
 interface LogListProps {
   logs: Log[];

@@ -1,45 +1,21 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useState, useEffect } from "react";
 import { LogList } from "./_components";
-import { mapLogData } from "./_utils";
+import { Log } from "@/shared/types";
+import { fetchLogs } from "./_utils";
 
-const fetchLogs = async () => {
-  const response = await fetch("https://challenges.betterstudio.io/logs", {
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "x-api-key": `${process.env.API_KEY_LOGS}`,
-    },
-  });
+export default function Home() {
+  const [logs, setLogs] = useState<Log[]>([]);
 
-  const reader = response.body?.getReader();
+  useEffect(() => {
+    const loadLogs = async () => {
+      const logsData = await fetchLogs();
+      setLogs(logsData);
+    };
 
-  if (!reader) {
-    throw new Error("No readable stream");
-  }
-
-  const decoder = new TextDecoder();
-
-  try {
-    const { value } = await reader.read();
-
-    if (value === undefined) return notFound();
-
-    // Decode chunk
-    const chunk = decoder.decode(value, { stream: true });
-    if (!chunk || chunk.length === 0) return notFound();
-
-    const formattedLogs = chunk
-      .replaceAll(`"`, "")
-      .replaceAll("[", "")
-      .split(",");
-
-    return formattedLogs.map(mapLogData);
-  } finally {
-    reader.releaseLock();
-  }
-};
-
-export default async function Home() {
-  const logs = await fetchLogs();
+    loadLogs();
+  }, []);
 
   return (
     <section id="home-page">

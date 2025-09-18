@@ -8,9 +8,9 @@ import {
   Rocket,
   TriangleAlert,
 } from "lucide-react";
-import { Log } from "../_types";
 import { useState } from "react";
 import Link from "next/link";
+import { Log } from "@/shared/types";
 
 interface LogItemProps {
   logData: Log;
