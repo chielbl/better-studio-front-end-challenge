@@ -66,6 +66,8 @@ export default function LogContent({ id }: LogContentProps) {
   if (!log) return null;
 
   const { authorId, level, message, source, timestamp } = log;
+  const fixedString = timestamp.replace(/\s+([-+]\d{2}:\d{2})$/, "$1");
+  const date = new Date(fixedString).toLocaleString();
 
   const Icon =
     (level === "info" && Info) ||
@@ -103,9 +105,7 @@ export default function LogContent({ id }: LogContentProps) {
     <div className={containerStyles}>
       <div className={topStyles}>
         {Icon ? <Icon className={getIconColor} /> : <span className="flex-1" />}
-        <p className="text-sm md:text-lg">
-          {new Date(timestamp).toLocaleString()}
-        </p>
+        <p className="text-sm md:text-lg">{date}</p>
       </div>
 
       <div className="overflow-hidden transition-all duration-300 ease-in-out max-h-96">

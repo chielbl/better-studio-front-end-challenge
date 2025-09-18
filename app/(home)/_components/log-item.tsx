@@ -15,6 +15,8 @@ interface LogItemProps {
 }
 export default function LogItem({ logData }: LogItemProps) {
   const { authorId, timestamp, level, message, source } = logData;
+  const fixedString = timestamp.replace(/\s+([-+]\d{2}:\d{2})$/, "$1");
+  const date = new Date(fixedString).toLocaleString();
 
   const Icon =
     (level === "info" && Info) ||
@@ -52,9 +54,7 @@ export default function LogItem({ logData }: LogItemProps) {
     <div className={containerStyles}>
       <Link href={`/${authorId}`} className={topStyles}>
         {Icon ? <Icon className={getIconColor} /> : <span className="flex-1" />}
-        <p className="text-sm md:text-lg">
-          {new Date(timestamp).toLocaleString()}
-        </p>
+        <p className="text-sm md:text-lg">{date}</p>
         <ChevronRight size={24} />
       </Link>
 

@@ -46,7 +46,6 @@ export default function Home() {
     if (searchValue) {
       filteredLogs = filteredLogs.filter((fLog) => {
         return Object.entries(fLog).some(([, value]) => {
-          console.log("🚀 ~ Home ~ value:", value);
           if (typeof value === "string") {
             return value.toLowerCase().includes(searchValue.toLowerCase());
           }
@@ -63,7 +62,11 @@ export default function Home() {
     // Date Filter: Converts timestamp to locale date string for comparison
     if (selectedDate) {
       filteredLogs = filteredLogs.filter((log) => {
-        const logDate = new Date(log.timestamp).toLocaleDateString();
+        const fixedString = log.timestamp.replace(
+          /\s+([-+]\d{2}:\d{2})$/,
+          "$1"
+        );
+        const logDate = new Date(fixedString).toLocaleDateString();
         return logDate === selectedDate;
       });
     }

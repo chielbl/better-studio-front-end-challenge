@@ -17,7 +17,8 @@ export default function LogDateFilter({
 
   const getUniqueDates = (timestamps: string[]) => {
     const dates = timestamps.map((timestamp) => {
-      const date = new Date(timestamp);
+      const fixedString = timestamp.replace(/\s+([-+]\d{2}:\d{2})$/, "$1");
+      const date = new Date(fixedString);
       return date.toLocaleDateString();
     });
 
