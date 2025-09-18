@@ -9,7 +9,7 @@ export default function LogLevelFilter({
   levelOnClick,
 }: LogLevelFilterProps) {
   return (
-    <div className="flex m-auto border border-solid border-primary-400 rounded-full overflow-hidden">
+    <div className="flex border border-solid border-primary-400 rounded-full overflow-hidden">
       {levels.map((level) => (
         <button
           key={level}

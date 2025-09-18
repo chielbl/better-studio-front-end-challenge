@@ -1,7 +1,12 @@
 "use client";
 
 import { Loader } from "@/shared/components";
-import { LogLevelFilter, LogList, LogSearch } from "./_components";
+import {
+  LogDateFilter,
+  LogLevelFilter,
+  LogList,
+  LogSearch,
+} from "./_components";
 import { fetchLogs } from "./_utils";
 import useSWR from "swr";
 import { notFound } from "next/navigation";
@@ -51,6 +56,7 @@ export default function Home() {
       ].filter((level) => level !== ""),
     [logs]
   );
+  const timestamps = useMemo(() => logs.map((log) => log.timestamp), [logs]);
 
   const handleOnSearch = (searchValue: string) => {
     setSearchValue(searchValue);
@@ -59,6 +65,10 @@ export default function Home() {
   const handleSelectLevel = (level: string) => {
     if (level === selectedLevel) return setSelectedLevel("");
     setSelectedLevel(level);
+  };
+
+  const handleSelectOnDate = (date: string) => {
+    console.log("🚀 ~ handleSelectOnDate ~ date:", date);
   };
 
   if (isLoading)
@@ -74,11 +84,17 @@ export default function Home() {
     <section id="home-page" className="min-h-screen">
       <div className="flex flex-col gap-8">
         <LogSearch searchValue={searchValue} onSearch={handleOnSearch} />
-        <LogLevelFilter
-          levels={uniqueLevels}
-          selectedLevel={selectedLevel}
-          levelOnClick={handleSelectLevel}
-        />
+        <div className="flex flex-col gap-2 m-auto xs:flex-row">
+          <LogLevelFilter
+            levels={uniqueLevels}
+            selectedLevel={selectedLevel}
+            levelOnClick={handleSelectLevel}
+          />
+          <LogDateFilter
+            timestamps={timestamps}
+            onDateSelect={handleSelectOnDate}
+          />
+        </div>
         <LogList logs={filteredLogs} />
       </div>
     </section>
