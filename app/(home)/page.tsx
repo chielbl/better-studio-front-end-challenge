@@ -1,20 +1,41 @@
 "use client";
 
 import { Loader } from "@/shared/components";
-import { LogLevelFilter, LogList } from "./_components";
+import { LogLevelFilter, LogList, LogSearch } from "./_components";
 import { fetchLogs } from "./_utils";
 import useSWR from "swr";
 import { notFound } from "next/navigation";
 import { useMemo, useState } from "react";
 
 export default function Home() {
-  const { data: logs = [], error, isLoading } = useSWR("/api/logs", fetchLogs);
+  const {
+    data: logs = [],
+    error,
+    isLoading,
+  } = useSWR("/api/logs", fetchLogs, {
+    revalidateOnFocus: false, //. To avoid re-new the data when windows is focus.
+  });
+  const [searchValue, setSearchValue] = useState<string>("");
   const [selectedLevel, setSelectedLevel] = useState<string>("");
 
   const filteredLogs = useMemo(() => {
-    if (!selectedLevel || selectedLevel.length === 0) return logs;
-    return logs.filter((log) => log.level === selectedLevel);
-  }, [logs, selectedLevel]);
+    let filteredLogs = logs;
+    if (searchValue) {
+      filteredLogs = filteredLogs.filter((fLog) => {
+        return Object.entries(fLog).some(([, value]) => {
+          console.log("🚀 ~ Home ~ value:", value);
+          if (typeof value === "string") {
+            return value.toLowerCase().includes(searchValue.toLowerCase());
+          }
+          return null;
+        });
+      });
+    }
+    if (selectedLevel) {
+      filteredLogs = filteredLogs.filter((log) => log.level === selectedLevel);
+    }
+    return filteredLogs;
+  }, [logs, selectedLevel, searchValue]);
 
   // Create unique category list for levels and filter empty strings
   const uniqueLevels = useMemo(
@@ -28,6 +49,10 @@ export default function Home() {
       ].filter((level) => level !== ""),
     [logs]
   );
+
+  const handleOnSearch = (searchValue: string) => {
+    setSearchValue(searchValue);
+  };
 
   const handleSelectLevel = (level: string) => {
     if (level === selectedLevel) return setSelectedLevel("");
@@ -44,13 +69,16 @@ export default function Home() {
   if (error) return <p>Error loading logs: {error.message}</p>;
 
   return (
-    <section id="home-page" className="min-h-screen flex flex-col gap-8">
-      <LogLevelFilter
-        levels={uniqueLevels}
-        selectedLevel={selectedLevel}
-        levelOnClick={handleSelectLevel}
-      />
-      <LogList logs={filteredLogs} />
+    <section id="home-page" className="min-h-screen">
+      <div className="flex flex-col gap-8">
+        <LogSearch searchValue={searchValue} onSearch={handleOnSearch} />
+        <LogLevelFilter
+          levels={uniqueLevels}
+          selectedLevel={selectedLevel}
+          levelOnClick={handleSelectLevel}
+        />
+        <LogList logs={filteredLogs} />
+      </div>
     </section>
   );
 }
