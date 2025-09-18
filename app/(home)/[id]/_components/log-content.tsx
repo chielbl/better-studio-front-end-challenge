@@ -3,7 +3,7 @@
 import { Loader } from "@/shared/components";
 import { Log } from "@/shared/types";
 import classNames from "classnames";
-import { Info, TriangleAlert, OctagonX, Rocket } from "lucide-react";
+import { Info, TriangleAlert, OctagonX, Rocket, Eye } from "lucide-react";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSWRConfig } from "swr";
@@ -72,7 +72,7 @@ export default function LogContent({ id }: LogContentProps) {
     (level === "warn" && TriangleAlert) ||
     (level === "error" && OctagonX) ||
     (level === "debug" && Rocket) ||
-    null;
+    Eye;
 
   const getIconColor =
     (level === "info" && "text-blue-600") ||

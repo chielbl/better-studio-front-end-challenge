@@ -1,5 +1,6 @@
 import {
   ChevronRight,
+  Eye,
   Info,
   OctagonX,
   Rocket,
@@ -20,7 +21,7 @@ export default function LogItem({ logData }: LogItemProps) {
     (level === "warn" && TriangleAlert) ||
     (level === "error" && OctagonX) ||
     (level === "debug" && Rocket) ||
-    null;
+    Eye;
 
   const getIconColor =
     (level === "info" && "text-blue-600") ||
