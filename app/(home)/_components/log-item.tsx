@@ -42,13 +42,13 @@ export default function LogItem({ logData }: LogItemProps) {
   );
 
   return (
-    <Link href={`/${authorId}`} className={containerStyles}>
-      <div className={topStyles}>
+    <div className={containerStyles}>
+      <Link href={`/${authorId}`} className={topStyles}>
         {Icon ? <Icon className={getIconColor} /> : <span className="flex-1" />}
         <p className="text-sm md:text-lg">
           {new Date(timestamp).toLocaleString()}
         </p>
-      </div>
+      </Link>
 
       <div className="overflow-hidden transition-all duration-300 ease-in-out max-h-96">
         <div className="p-4 bg-white text-gray-700">
@@ -63,6 +63,6 @@ export default function LogItem({ logData }: LogItemProps) {
           </p>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
