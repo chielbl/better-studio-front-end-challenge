@@ -12,7 +12,7 @@ export default async function LogDetail({ params }: LogDetailProps) {
     <section className="flex flex-col gap-8 min-h-screen">
       <Link href="/" className="flex gap-4 items-center">
         <ChevronLeft />
-        <h2 className="text-4xl font-bold">Detail page (#{id})</h2>
+        <h2 className="text-md lg:text-2xl xl:text-4xl font-bold">{id}</h2>
       </Link>
       <div className="xl:w-2xl xl:mx-auto">
         <LogContent id={id} />
