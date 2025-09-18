@@ -1,24 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Loader } from "@/shared/components";
 import { LogList } from "./_components";
-import { Log } from "@/shared/types";
 import { fetchLogs } from "./_utils";
+import useSWR from "swr";
+import { notFound } from "next/navigation";
 
 export default function Home() {
-  const [logs, setLogs] = useState<Log[]>([]);
+  const { data: logs, error, isLoading } = useSWR("/api/logs", fetchLogs);
 
-  useEffect(() => {
-    const loadLogs = async () => {
-      const logsData = await fetchLogs();
-      setLogs(logsData);
-    };
-
-    loadLogs();
-  }, []);
+  if (isLoading)
+    return (
+      <div className="min-h-screen">
+        <Loader message="Fetching logs" />
+      </div>
+    );
+  if (!logs) return notFound();
+  if (error) return <p>Error loading logs: {error.message}</p>;
 
   return (
-    <section id="home-page">
+    <section id="home-page" className="min-h-screen">
       <LogList logs={logs} />
     </section>
   );
