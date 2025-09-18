@@ -1,4 +1,10 @@
-import { Info, OctagonX, Rocket, TriangleAlert } from "lucide-react";
+import {
+  ChevronRight,
+  Info,
+  OctagonX,
+  Rocket,
+  TriangleAlert,
+} from "lucide-react";
 import { Log } from "@/shared/types";
 import classNames from "classnames";
 import Link from "next/link";
@@ -48,6 +54,7 @@ export default function LogItem({ logData }: LogItemProps) {
         <p className="text-sm md:text-lg">
           {new Date(timestamp).toLocaleString()}
         </p>
+        <ChevronRight size={24} />
       </Link>
 
       <div className="overflow-hidden transition-all duration-300 ease-in-out max-h-96">
