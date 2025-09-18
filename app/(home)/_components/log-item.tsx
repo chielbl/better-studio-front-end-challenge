@@ -1,7 +1,7 @@
-import { Bell, Info, OctagonX, Rocket, TriangleAlert } from "lucide-react";
-import Link from "next/link";
+import { Info, OctagonX, Rocket, TriangleAlert } from "lucide-react";
 import { Log } from "@/shared/types";
 import classNames from "classnames";
+import Link from "next/link";
 
 interface LogItemProps {
   logData: Log;
@@ -14,7 +14,7 @@ export default function LogItem({ logData }: LogItemProps) {
     (level === "warn" && TriangleAlert) ||
     (level === "error" && OctagonX) ||
     (level === "debug" && Rocket) ||
-    Bell;
+    null;
 
   const getIconColor =
     (level === "info" && "text-blue-600") ||
@@ -44,8 +44,10 @@ export default function LogItem({ logData }: LogItemProps) {
   return (
     <div className={containerStyles}>
       <div className={topStyles}>
-        <Icon className={getIconColor} />
-        <p className="text-sm md:text-lg">{timestamp}</p>
+        {Icon ? <Icon className={getIconColor} /> : <span className="flex-1" />}
+        <p className="text-sm md:text-lg">
+          {new Date(timestamp).toLocaleString()}
+        </p>
       </div>
 
       <div className="overflow-hidden transition-all duration-300 ease-in-out max-h-96">
@@ -56,9 +58,12 @@ export default function LogItem({ logData }: LogItemProps) {
           <p>
             <strong>Message:</strong> {message}
           </p>
-          <p>
+          <p className="mb-4">
             <strong>Source:</strong> {source}
           </p>
+          <Link href={`/${authorId}`} className="underline text-primary-600">
+            Show more info
+          </Link>
         </div>
       </div>
     </div>
