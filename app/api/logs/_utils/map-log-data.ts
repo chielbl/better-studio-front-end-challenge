@@ -1,4 +1,4 @@
-import { Log } from "../_types/Log";
+import { Log } from "@/shared/types";
 
 export function mapLogData(logData: string): Log {
   // Split on "|=|" separator
