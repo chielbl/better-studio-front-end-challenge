@@ -1,24 +1,13 @@
-"use client";
-
-import {
-  Bell,
-  ChevronDown,
-  Info,
-  OctagonX,
-  Rocket,
-  TriangleAlert,
-} from "lucide-react";
-import { useState } from "react";
+import { Bell, Info, OctagonX, Rocket, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { Log } from "@/shared/types";
+import classNames from "classnames";
 
 interface LogItemProps {
   logData: Log;
 }
 export default function LogItem({ logData }: LogItemProps) {
   const { authorId, timestamp, level, message, source } = logData;
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const Icon =
     (level === "info" && Info) ||
@@ -27,45 +16,49 @@ export default function LogItem({ logData }: LogItemProps) {
     (level === "debug" && Rocket) ||
     Bell;
 
-  const toggleAccordion = () => setIsOpen((prev) => !prev);
+  const getIconColor =
+    (level === "info" && "text-blue-600") ||
+    (level === "warn" && "text-orange-400") ||
+    (level === "error" && "text-red-500") ||
+    (level === "debug" && "text-primary-900") ||
+    "text-gray-600";
+
+  const containerStyles = classNames(
+    "w-full border rounded-lg overflow-hidden border-2",
+    (level === "info" && "border-blue-600") ||
+      (level === "warn" && "border-orange-400") ||
+      (level === "error" && "border-red-500") ||
+      (level === "debug" && "border-primary-900") ||
+      "border-gray-600"
+  );
+
+  const topStyles = classNames(
+    "w-full flex justify-between items-center gap-4 p-4",
+    (level === "info" && "bg-blue-200") ||
+      (level === "warn" && "bg-orange-200") ||
+      (level === "error" && "bg-red-200") ||
+      (level === "debug" && "bg-primary-100") ||
+      "bg-gray-200"
+  );
 
   return (
-    <div className="w-full border border-primary-400 rounded-lg overflow-hidden">
-      <button
-        onClick={toggleAccordion}
-        className="w-full flex justify-between items-center gap-4 p-4 bg-primary-100 transition-colors cursor-pointer hover:bg-primary-200"
-      >
-        <Icon />
+    <div className={containerStyles}>
+      <div className={topStyles}>
+        <Icon className={getIconColor} />
         <p className="text-sm md:text-lg">{timestamp}</p>
-        <ChevronDown
-          size={24}
-          className={`transform transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
-      </button>
+      </div>
 
-      <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
+      <div className="overflow-hidden transition-all duration-300 ease-in-out max-h-96">
         <div className="p-4 bg-white text-gray-700">
           <p>
             <strong>Author id:</strong> {authorId}
           </p>
           <p>
-            <strong>Time:</strong> {timestamp}
-          </p>
-          <p>
             <strong>Message:</strong> {message}
           </p>
-          <p className="mb-4">
+          <p>
             <strong>Source:</strong> {source}
           </p>
-          <Link href={`/${authorId}`} className="underline text-primary-600">
-            Show more info
-          </Link>
         </div>
       </div>
     </div>
