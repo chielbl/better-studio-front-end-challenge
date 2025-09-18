@@ -15,18 +15,13 @@ export default function LogDateFilter({
 }: LogDateFilterProps) {
   const [selectedDate, setSelectedDate] = useState<string>("");
 
-  // Converteer timestamps naar datum strings en filter unieke datums
   const getUniqueDates = (timestamps: string[]) => {
     const dates = timestamps.map((timestamp) => {
       const date = new Date(timestamp);
-      return date.toLocaleDateString("nl-NL", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
+      return date.toLocaleDateString();
     });
 
-    // Filter unieke datums
+    // Filter unique dates
     return [...new Set(dates)];
   };
 

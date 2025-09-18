@@ -24,6 +24,7 @@ export default function Home() {
 
   const [searchValue, setSearchValue] = useState<string>("");
   const [selectedLevel, setSelectedLevel] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>("");
 
   const filteredLogs = useMemo(() => {
     let filteredLogs = logs;
@@ -41,8 +42,14 @@ export default function Home() {
     if (selectedLevel) {
       filteredLogs = filteredLogs.filter((log) => log.level === selectedLevel);
     }
+    if (selectedDate) {
+      filteredLogs = filteredLogs.filter((log) => {
+        const logDate = new Date(log.timestamp).toLocaleDateString();
+        return logDate === selectedDate;
+      });
+    }
     return filteredLogs;
-  }, [logs, selectedLevel, searchValue]);
+  }, [logs, selectedLevel, searchValue, selectedDate]);
 
   // Create unique category list for levels and filter empty strings
   const uniqueLevels = useMemo(
@@ -58,17 +65,19 @@ export default function Home() {
   );
   const timestamps = useMemo(() => logs.map((log) => log.timestamp), [logs]);
 
-  const handleOnSearch = (searchValue: string) => {
-    setSearchValue(searchValue);
-  };
+  const handleOnSearch = (searchValue: string) => setSearchValue(searchValue);
 
   const handleSelectLevel = (level: string) => {
     if (level === selectedLevel) return setSelectedLevel("");
     setSelectedLevel(level);
   };
 
-  const handleSelectOnDate = (date: string) => {
-    console.log("🚀 ~ handleSelectOnDate ~ date:", date);
+  const handleSelectOnDate = (date: string) => setSelectedDate(date);
+
+  const handleResetFilters = () => {
+    setSearchValue("");
+    setSelectedLevel("");
+    setSelectedDate("");
   };
 
   if (isLoading)
@@ -94,6 +103,12 @@ export default function Home() {
             timestamps={timestamps}
             onDateSelect={handleSelectOnDate}
           />
+          <button
+            className="bg-primary-500 text-primary-50 cursor-pointer hover:bg-primary-600 px-4 py-2 rounded-md transition-colors duration-300"
+            onClick={handleResetFilters}
+          >
+            Home
+          </button>
         </div>
         <LogList logs={filteredLogs} />
       </div>
