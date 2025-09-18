@@ -12,13 +12,26 @@ interface LogContentProps {
   id: string; // authorId
 }
 export default function LogContent({ id }: LogContentProps) {
+  /**
+   * Cache Access Pattern:
+   * - useSWRConfig provides global cache access
+   * - Cache persists across page navigation
+   * - No need to re-fetch data when navigating from list to detail
+   */
   const { cache } = useSWRConfig();
   const cachedLogs = cache.get("/api/logs");
 
+  // Local State Management for Detail View
   const [log, setLog] = useState<Log | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>();
 
+  /**
+   * Cache Validation & Data Extraction:
+   * - Validates cache exists to prevent errors
+   * - Finds specific log by authorId from cached data
+   * - Sets loading state appropriately
+   */
   useEffect(() => {
     if (!cachedLogs || cachedLogs === undefined) {
       setIsLoading(false);
@@ -32,6 +45,13 @@ export default function LogContent({ id }: LogContentProps) {
     setIsLoading(false);
   }, [cachedLogs, id]);
 
+  /**
+   * Early Return Pattern for Different States:
+   * - Loading: Shows spinner with dynamic message
+   * - Error: User-friendly error message for cache miss
+   * - Not Found: Triggers Next.js 404 page
+   * - Null Guard: Additional safety check
+   */
   if (isLoading) {
     return (
       <div className="min-h-screen">
