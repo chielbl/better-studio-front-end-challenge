@@ -91,24 +91,26 @@ export default function Home() {
 
   return (
     <section id="home-page" className="min-h-screen">
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
         <LogSearch searchValue={searchValue} onSearch={handleOnSearch} />
-        <div className="flex flex-col gap-2 m-auto xs:flex-row">
+        <div className="flex flex-col items-center gap-4 m-auto xs:flex-row mb-8">
           <LogLevelFilter
             levels={uniqueLevels}
             selectedLevel={selectedLevel}
             levelOnClick={handleSelectLevel}
           />
-          <LogDateFilter
-            timestamps={timestamps}
-            onDateSelect={handleSelectOnDate}
-          />
-          <button
-            className="bg-primary-500 text-primary-50 cursor-pointer hover:bg-primary-600 px-4 py-2 rounded-md transition-colors duration-300"
-            onClick={handleResetFilters}
-          >
-            Home
-          </button>
+          <div className="flex gap-4">
+            <LogDateFilter
+              timestamps={timestamps}
+              onDateSelect={handleSelectOnDate}
+            />
+            <button
+              className="bg-primary-500 w-max text-primary-50 cursor-pointer hover:bg-primary-600 px-2 py-1 rounded-md transition-colors duration-300"
+              onClick={handleResetFilters}
+            >
+              Clear
+            </button>
+          </div>
         </div>
         <LogList logs={filteredLogs} />
       </div>

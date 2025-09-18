@@ -12,15 +12,9 @@ export default function Header() {
           height={32}
         />
       </Link>
-      <h1 className="invisible sm:visible text-md lg:text-2xl">
+      <h1 className="flex-1 text-center text-md lg:text-2xl">
         Chiel Bleyenbergh (Front-end Challenge)
       </h1>
-      <Link
-        href="/"
-        className="bg-primary-500 text-primary-50 hover:bg-primary-600 px-4 py-2 rounded-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:-translate-y-0.5"
-      >
-        Home
-      </Link>
     </header>
   );
 }
