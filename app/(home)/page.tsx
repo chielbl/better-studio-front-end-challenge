@@ -90,7 +90,10 @@ export default function Home() {
   );
 
   // Extract timestamps for date filtering - memoized to prevent recreation
-  const timestamps = useMemo(() => logs.map((log) => log.timestamp), [logs]);
+  const timestamps = useMemo(
+    () => filteredLogs.map((log) => log.timestamp),
+    [filteredLogs]
+  );
 
   const handleOnSearch = (searchValue: string) => setSearchValue(searchValue);
 
