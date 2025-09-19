@@ -23,7 +23,7 @@ export default function Home() {
     data: logs = [],
     error,
     isLoading,
-  } = useSWR("/api/logs", fetchLogs, {
+  } = useSWR("logs", fetchLogs, {
     revalidateOnFocus: false, //. To avoid re-new the data when windows is focus.
     refreshInterval: 0, // Also disable interval revalidation
   });

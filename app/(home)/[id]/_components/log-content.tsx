@@ -19,7 +19,7 @@ export default function LogContent({ id }: LogContentProps) {
    * - No need to re-fetch data when navigating from list to detail
    */
   const { cache } = useSWRConfig();
-  const cachedLogs = cache.get("/api/logs");
+  const cachedLogs = cache.get("logs");
 
   // Local State Management for Detail View
   const [log, setLog] = useState<Log | undefined>();
