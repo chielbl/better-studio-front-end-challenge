@@ -44,18 +44,20 @@ export default function Home() {
   const filteredLogs = useMemo(() => {
     let filteredLogs = logs;
 
-    // Search Filter: Checks all object properties for string matches
+    // Search Filter: Checks only on "message", "sources" and "authorId"
     if (searchValue) {
-      filteredLogs = filteredLogs.filter((fLog) => {
-        return Object.entries(fLog).some(([, value]) => {
-          if (typeof value === "string") {
-            return value
-              .toLowerCase()
-              .includes(debouncedSearchValue.toLowerCase());
-          }
-          return null;
-        });
-      });
+      filteredLogs = logs.filter(
+        (log) =>
+          log.message
+            .toLowerCase()
+            .includes(debouncedSearchValue.toLowerCase()) ||
+          log.source
+            .toLowerCase()
+            .includes(debouncedSearchValue.toLowerCase()) ||
+          log.authorId
+            .toLowerCase()
+            .includes(debouncedSearchValue.toLowerCase())
+      );
     }
 
     // Level Filter: Exact match comparison
