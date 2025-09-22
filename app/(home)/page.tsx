@@ -10,9 +10,10 @@ import {
 import { fetchLogs, setUniqueLevels } from "./_utils";
 import useSWR from "swr";
 import { notFound } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useDebounce } from "@/shared/hooks";
 import { filterLogs } from "./_utils/filter-logs";
+import { useFiltersFromSearchParams } from "./_hooks";
 
 export default function Home() {
   /**
@@ -31,10 +32,8 @@ export default function Home() {
   });
 
   // State Management for Filtering - Each filter operates independently
-  const [searchValue, setSearchValue] = useState<string>("");
-  const debouncedSearchValue = useDebounce(searchValue, 300);
-  const [selectedLevel, setSelectedLevel] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const { filters, setFilter, resetFilter } = useFiltersFromSearchParams();
+  const debouncedSearchValue = useDebounce(filters.search, 300);
 
   /**
    * useMemo for Performance Optimization:
@@ -46,10 +45,10 @@ export default function Home() {
     () =>
       filterLogs(logs, {
         searchValue: debouncedSearchValue,
-        level: selectedLevel,
-        date: selectedDate,
+        level: filters.level,
+        date: filters.date,
       }),
-    [logs, debouncedSearchValue, selectedLevel, selectedDate]
+    [logs, debouncedSearchValue, filters.level, filters.date]
   );
 
   /**
@@ -63,22 +62,20 @@ export default function Home() {
   // Extract timestamps for date filtering - memoized to prevent recreation
   const timestamps = useMemo(() => logs.map((log) => log.timestamp), [logs]);
 
-  const handleOnSearch = (searchValue: string) => setSearchValue(searchValue);
-
+  const handleOnSearch = (searchValue: string) => {
+    setFilter("search", searchValue);
+  };
   // Toggle Logic: Click same level to deselect, different level to select
-  const handleSelectLevel = (level: string) => {
-    if (level === selectedLevel) return setSelectedLevel("");
-    setSelectedLevel(level);
+  const handleSelectLevel = (levelValue: string) => {
+    setFilter("level", levelValue === filters.level ? "" : levelValue);
   };
 
-  const handleSelectOnDate = (date: string) => setSelectedDate(date);
+  const handleSelectOnDate = (dateValue: string) => {
+    setFilter("date", dateValue);
+  };
 
   // Reset all filters to initial state
-  const handleResetFilters = () => {
-    setSearchValue("");
-    setSelectedLevel("");
-    setSelectedDate("");
-  };
+  const handleResetFilters = () => resetFilter();
 
   /**
    * Loading States & Error Handling:
@@ -97,12 +94,12 @@ export default function Home() {
   return (
     <section id="home-page" className="min-h-screen">
       <div className="flex flex-col gap-4">
-        <LogSearch searchValue={searchValue} onSearch={handleOnSearch} />
+        <LogSearch searchValue={filters.search} onSearch={handleOnSearch} />
 
         <div className="flex flex-col items-center gap-4 m-auto xs:flex-row mb-8">
           <LogLevelFilter
             levels={uniqueLevels}
-            selectedLevel={selectedLevel}
+            selectedLevel={filters.level}
             levelOnClick={handleSelectLevel}
           />
 
