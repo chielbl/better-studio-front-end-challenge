@@ -11,6 +11,7 @@ import { fetchLogs } from "./_utils";
 import useSWR from "swr";
 import { notFound } from "next/navigation";
 import { useMemo, useState } from "react";
+import { useDebounce } from "@/shared/hooks";
 
 export default function Home() {
   /**
@@ -30,6 +31,7 @@ export default function Home() {
 
   // State Management for Filtering - Each filter operates independently
   const [searchValue, setSearchValue] = useState<string>("");
+  const debouncedSearchValue = useDebounce(searchValue, 300);
   const [selectedLevel, setSelectedLevel] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string>("");
 
@@ -47,7 +49,9 @@ export default function Home() {
       filteredLogs = filteredLogs.filter((fLog) => {
         return Object.entries(fLog).some(([, value]) => {
           if (typeof value === "string") {
-            return value.toLowerCase().includes(searchValue.toLowerCase());
+            return value
+              .toLowerCase()
+              .includes(debouncedSearchValue.toLowerCase());
           }
           return null;
         });
@@ -72,7 +76,7 @@ export default function Home() {
     }
 
     return filteredLogs;
-  }, [logs, selectedLevel, searchValue, selectedDate]);
+  }, [logs, searchValue, selectedLevel, selectedDate, debouncedSearchValue]);
 
   /**
    * Create Unique Sorted Levels:
