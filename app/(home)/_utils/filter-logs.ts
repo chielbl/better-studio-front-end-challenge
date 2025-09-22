@@ -38,7 +38,6 @@ export function filterLogs(logs: Log[], filterParams: FilterParams) {
   filteredLogs = filterLogsOnSearch(filteredLogs, searchValue);
   filteredLogs = filterLogsOnLevel(filteredLogs, level);
   filteredLogs = filterLogsOnDate(filteredLogs, date);
-  console.log("🚀 ~ filterLogs ~ filteredLogs:", filteredLogs);
 
   return filteredLogs;
 }
