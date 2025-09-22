@@ -12,6 +12,7 @@ import useSWR from "swr";
 import { notFound } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useDebounce } from "@/shared/hooks";
+import { filterLogs } from "./_utils/filter-logs";
 
 export default function Home() {
   /**
@@ -41,44 +42,15 @@ export default function Home() {
    * - Only recalculates when dependencies (logs, filters) change
    * - Prevents unnecessary re-renders and computations
    */
-  const filteredLogs = useMemo(() => {
-    let filteredLogs = logs;
-
-    // Search Filter: Checks only on "message", "sources" and "authorId"
-    if (searchValue) {
-      filteredLogs = logs.filter(
-        (log) =>
-          log.message
-            .toLowerCase()
-            .includes(debouncedSearchValue.toLowerCase()) ||
-          log.source
-            .toLowerCase()
-            .includes(debouncedSearchValue.toLowerCase()) ||
-          log.authorId
-            .toLowerCase()
-            .includes(debouncedSearchValue.toLowerCase())
-      );
-    }
-
-    // Level Filter: Exact match comparison
-    if (selectedLevel) {
-      filteredLogs = filteredLogs.filter((log) => log.level === selectedLevel);
-    }
-
-    // Date Filter: Converts timestamp to locale date string for comparison
-    if (selectedDate) {
-      filteredLogs = filteredLogs.filter((log) => {
-        const fixedString = log.timestamp.replace(
-          /\s+([-+]\d{2}:\d{2})$/,
-          "$1"
-        );
-        const logDate = new Date(fixedString).toLocaleDateString();
-        return logDate === selectedDate;
-      });
-    }
-
-    return filteredLogs;
-  }, [logs, searchValue, selectedLevel, selectedDate, debouncedSearchValue]);
+  const filteredLogs = useMemo(
+    () =>
+      filterLogs(logs, {
+        searchValue: debouncedSearchValue,
+        level: selectedLevel,
+        date: selectedDate,
+      }),
+    [logs, debouncedSearchValue, selectedLevel, selectedDate]
+  );
 
   /**
    * Create Unique Sorted Levels:
