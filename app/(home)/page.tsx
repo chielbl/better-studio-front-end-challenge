@@ -7,7 +7,7 @@ import {
   LogList,
   LogSearch,
 } from "./_components";
-import { fetchLogs } from "./_utils";
+import { fetchLogs, setUniqueLevels } from "./_utils";
 import useSWR from "swr";
 import { notFound } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -58,23 +58,10 @@ export default function Home() {
    * - Sorts alphabetically (case-insensitive)
    * - Filters out empty strings to prevent UI issues
    */
-  const uniqueLevels = useMemo(
-    () =>
-      [
-        ...new Set(
-          logs
-            .map((log) => log.level)
-            .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-        ),
-      ].filter((level) => level !== ""),
-    [logs]
-  );
+  const uniqueLevels = useMemo(() => setUniqueLevels(logs), [logs]);
 
   // Extract timestamps for date filtering - memoized to prevent recreation
-  const timestamps = useMemo(
-    () => filteredLogs.map((log) => log.timestamp),
-    [filteredLogs]
-  );
+  const timestamps = useMemo(() => logs.map((log) => log.timestamp), [logs]);
 
   const handleOnSearch = (searchValue: string) => setSearchValue(searchValue);
 
