@@ -2,27 +2,12 @@
 
 import { Loader } from "@/shared/components";
 import { Log } from "@/shared/types";
+import { localStore } from "@/shared/utils";
 import classNames from "classnames";
 import { Info, TriangleAlert, OctagonX, Rocket, Eye } from "lucide-react";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSWRConfig } from "swr";
-
-const saveLogToLocalStorage = (log: Log | undefined) => {
-  if (log) {
-    localStorage.setItem("logDetail", JSON.stringify(log));
-  } else {
-    localStorage.removeItem("logDetail");
-  }
-};
-
-const getLocalStorageLog = (): Log | undefined => {
-  if (typeof window !== "undefined") {
-    const stored = localStorage.getItem("logDetail");
-    return stored ? JSON.parse(stored) : undefined;
-  }
-  return undefined;
-};
 
 interface LogContentProps {
   id: string; // authorId
@@ -52,8 +37,7 @@ export default function LogContent({ id }: LogContentProps) {
    * - Ensure loading state is updated at the end
    */
   useEffect(() => {
-    const logDetail = getLocalStorageLog();
-
+    const logDetail = localStore.get<Log>("logDetail");
     if (logDetail) {
       setLog(logDetail);
       setIsLoading(false);
@@ -63,7 +47,7 @@ export default function LogContent({ id }: LogContentProps) {
     if (!cachedLogs) {
       setError("We lost our cache data, please go back to your home page");
       setIsLoading(false);
-      saveLogToLocalStorage(undefined);
+      localStore.set("logDetail", undefined);
       return;
     }
 
@@ -71,12 +55,12 @@ export default function LogContent({ id }: LogContentProps) {
     const foundLog = cachedData.find((log) => log.authorId === id);
     if (!foundLog) {
       setError(`Log with id: ${id}, not found!`);
-      saveLogToLocalStorage(undefined);
-      setIsLoading(false);
+      localStore.set("logDetail", undefined);
+    } else {
+      setLog(foundLog);
+      localStore.set<Log>("logDetail", foundLog);
     }
 
-    setLog(foundLog);
-    saveLogToLocalStorage(foundLog);
     setIsLoading(false);
   }, [cachedLogs, id]);
 
@@ -101,7 +85,6 @@ export default function LogContent({ id }: LogContentProps) {
   if (!log) return null;
 
   const { authorId, level, message, source, timestamp } = log;
-  console.log("🚀 ~ LogContent ~ log:", log);
   const fixedString = timestamp.replace(/\s+([-+]\d{2}:\d{2})$/, "$1");
   const date = new Date(fixedString).toLocaleString();
 
