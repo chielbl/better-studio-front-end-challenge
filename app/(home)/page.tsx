@@ -9,7 +9,6 @@ import {
 } from "./_components";
 import { fetchLogs, setUniqueLevels } from "./_utils";
 import useSWR from "swr";
-import { notFound } from "next/navigation";
 import { useMemo } from "react";
 import { useDebounce } from "@/shared/hooks";
 import { filterLogs } from "./_utils/filter-logs";
