@@ -8,6 +8,22 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSWRConfig } from "swr";
 
+const saveLogToLocalStorage = (log: Log | undefined) => {
+  if (log) {
+    localStorage.setItem("logDetail", JSON.stringify(log));
+  } else {
+    localStorage.removeItem("logDetail");
+  }
+};
+
+const getLocalStorageLog = (): Log | undefined => {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("logDetail");
+    return stored ? JSON.parse(stored) : undefined;
+  }
+  return undefined;
+};
+
 interface LogContentProps {
   id: string; // authorId
 }
@@ -28,20 +44,39 @@ export default function LogContent({ id }: LogContentProps) {
 
   /**
    * Cache Validation & Data Extraction:
-   * - Validates cache exists to prevent errors
-   * - Finds specific log by authorId from cached data
-   * - Sets loading state appropriately
+   * - Attempt to retrieve data from localStorage first (client-side only)
+   * - If available, use it immediately and end loading
+   * - If no localStorage  validate global cache presence
+   * - Search for the log item in cache by authorId
+   * - Update state with found log or set error if not found
+   * - Ensure loading state is updated at the end
    */
   useEffect(() => {
-    if (!cachedLogs || cachedLogs === undefined) {
+    const logDetail = getLocalStorageLog();
+
+    if (logDetail) {
+      setLog(logDetail);
       setIsLoading(false);
-      return setError(
-        "We lost our cache data, please go back to your home page"
-      );
+      return;
     }
-    const cachedData = cachedLogs?.data as Log[];
+
+    if (!cachedLogs) {
+      setError("We lost our cache data, please go back to your home page");
+      setIsLoading(false);
+      saveLogToLocalStorage(undefined);
+      return;
+    }
+
+    const cachedData = cachedLogs.data as Log[];
     const foundLog = cachedData.find((log) => log.authorId === id);
+    if (!foundLog) {
+      setError(`Log with id: ${id}, not found!`);
+      saveLogToLocalStorage(undefined);
+      setIsLoading(false);
+    }
+
     setLog(foundLog);
+    saveLogToLocalStorage(foundLog);
     setIsLoading(false);
   }, [cachedLogs, id]);
 
@@ -66,6 +101,7 @@ export default function LogContent({ id }: LogContentProps) {
   if (!log) return null;
 
   const { authorId, level, message, source, timestamp } = log;
+  console.log("🚀 ~ LogContent ~ log:", log);
   const fixedString = timestamp.replace(/\s+([-+]\d{2}:\d{2})$/, "$1");
   const date = new Date(fixedString).toLocaleString();
 
