@@ -82,14 +82,15 @@ export default function Home() {
    * - Early returns prevent rendering main content during loading/error states
    * - notFound() triggers Next.js 404 page when data is empty
    */
-  if (isLoading)
+  if (isLoading) {
     return (
       <div className="min-h-screen">
-        <Loader message="Fetching logs" />
+        <Loader message="Fetching logs..." />
       </div>
     );
+  }
   if (error) return <p>Error loading logs: {error.message}</p>;
-  if (!isLoading && !error && !logs) return notFound();
+  // if (!isLoading && !error && !logs) return notFound();
 
   return (
     <section id="home-page" className="min-h-screen">
