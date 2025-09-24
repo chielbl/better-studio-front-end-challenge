@@ -37,13 +37,6 @@ export default function LogContent({ id }: LogContentProps) {
    * - Ensure loading state is updated at the end
    */
   useEffect(() => {
-    const logDetail = localStore.get<Log>("logDetail");
-    if (logDetail) {
-      setLog(logDetail);
-      setIsLoading(false);
-      return;
-    }
-
     if (!cachedLogs) {
       setError("We lost our cache data, please go back to your home page");
       setIsLoading(false);
@@ -55,12 +48,17 @@ export default function LogContent({ id }: LogContentProps) {
     const foundLog = cachedData.find((log) => log.authorId === id);
     if (!foundLog) {
       setError(`Log with id: ${id}, not found!`);
+      setIsLoading(false);
       localStore.set("logDetail", undefined);
-    } else {
-      setLog(foundLog);
+      return;
+    }
+
+    const storedLogDetail = localStore.get<Log>("logDetail");
+    if (foundLog !== storedLogDetail) {
       localStore.set<Log>("logDetail", foundLog);
     }
 
+    setLog(foundLog);
     setIsLoading(false);
   }, [cachedLogs, id]);
 
